@@ -51,34 +51,7 @@ $config = [
 				[
 					'class' => 'yii\log\FileTarget',
 					'levels' => ['error', 'warning'],
-				],
-				[
-					'class' => 'yii\log\FileTarget',
-					'levels' => ['info'],
-					'categories' => ['api', 'application'],
-					'logFile' => "@runtime/logs/api.log",
-					'maxFileSize' => 128,
-					'logVars' => ['_POST'],
-				],
-				// [
-				// 	'class' => 'yii\log\FileTarget',
-				// 	'levels' => ['profile'],
-				// 	'categories' => ['/init'],
-				// 	'logFile' => "@runtime/logs/init.log", // sample profile log setup
-				// 	'maxFileSize' => 128,
-				// 	'logVars' => [],
-				// ],
-				// [
-				// 	'class' => 'app\components\FileTargetShort',
-				// 	'levels' => ['info'],
-				// 	'categories' => ['/init'],
-				// 	'logFile' => "@runtime/logs/init-totals.log", // sample profile totals log setup
-				// 	'maxFileSize' => 128,
-				// 	'logVars' => [],
-				// 	'prefix' => function ($message) {
-				// 		return "";
-				// 	},
-				// ],
+				]
 			],
 		],
 		'db' => require(__DIR__ . '/db.php'),

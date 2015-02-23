@@ -21,10 +21,7 @@ class Controller extends \yii\rest\Controller
 			],
 			'corsFilter' => [
 				'class' => \yii\filters\Cors::className(),
-			],
-			'rateLimiter' => [
-				'class' => \yii\filters\RateLimiter::className(),
-			],
+			]
 		];
 	}
 
@@ -49,41 +46,25 @@ class Controller extends \yii\rest\Controller
 
 		echo json_encode(array_merge($data,['time'=>\Yii::getLogger()->getElapsedTime()*1000]));
 
-		// логирование
-			\Yii::info("\n" . json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE), 'api');
+		\Yii::info("\n" . json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE), 'api');
 
-		// замер загрузки процессора
-			// $result = exec('mpstat');
-			// $cpu = '0';
-			// if (preg_match('/.*all\s+(\d+\.\d\d)/', $result, $matches))
-			// 	$cpu = $matches[1];
+		\Yii::info(json_encode([
+				'timestamp' => $this->udate('Y-m-d\Th:i:s.u\Z'),
+				'total_time_ms' => \Yii::getLogger()->getElapsedTime()*1000,
+				'total_db_queries_count' => \Yii::getLogger()->getDbProfiling()[0],
+				'total_db_queries_time_ms' => \Yii::getLogger()->getDbProfiling()[1]*1000,
+			]), \Yii::$app->request->url);
+		\Yii::endProfile("apiTotalTimeBenchmark \n\tTotal time: " . \Yii::getLogger()->getElapsedTime() . "\n\tAll profiling results:\n" . json_encode(\Yii::getLogger()->getProfiling(), JSON_PRETTY_PRINT), \Yii::$app->request->url);
 
-		// останавливаем замер времени запроса
-			\Yii::info(json_encode([
-					'timestamp' => $this->udate('Y-m-d\Th:i:s.u\Z'),
-					// 'cpu' => $cpu,
-					'total_time_ms' => \Yii::getLogger()->getElapsedTime()*1000,
-					'total_db_queries_count' => \Yii::getLogger()->getDbProfiling()[0],
-					'total_db_queries_time_ms' => \Yii::getLogger()->getDbProfiling()[1]*1000,
-				]), \Yii::$app->request->url);
-			\Yii::endProfile("apiTotalTimeBenchmark \n\tTotal time: " . \Yii::getLogger()->getElapsedTime() . "\n\tAll profiling results:\n" . json_encode(\Yii::getLogger()->getProfiling(), JSON_PRETTY_PRINT), \Yii::$app->request->url);
-
-		exit; // по-чёрному, это пиздец
+		exit;
 	}
 
 	public function beforeAction($action)
 	{
 		parent::beforeAction($action);
-		
-		// начинаем замер времени запроса
-			\Yii::beginProfile('apiTotalTimeBenchmark');
 
-		// чтобы замерить сколько у нас запросов в минуту
-			$log = new LogRequests();
-			$log->timestamp = time();
-			$log->save();
-
-		// проверка входных параметров
+		if (\Yii::$app->request->isPost) 
+		{
 			if (!isset($_POST['uid']) || (($this->uid = $_POST['uid']) == ''))
 			{
 				echo json_encode([
@@ -105,20 +86,7 @@ class Controller extends \yii\rest\Controller
 				]);
 				return false;
 			}
-
-		// $auth_key = md5(app_id.'_'.$this->uid.'_'.app_secret);
-
-		// if ($auth_key != $this->auth_key)
-		// {
-		// 	$this->error(WrongAuthKey, "auth_key is wrong for uid " . $this->uid);
-		// 	return false;
-		// }
-
-		// лог сессий
-            if (!empty(\Yii::$app->user->sid)) {
-                LogSession::log(\Yii::$app->user->sid);
-            }
-
+		}
 
 		return true;
 	}
@@ -139,25 +107,11 @@ class Controller extends \yii\rest\Controller
 
 	protected function getUser()
 	{
-		if (!$user_model = \Yii::$app->user->identity /*Users::findOne(['user_id'=>$this->uid])*/)
+		if (!$user_model = \Yii::$app->user->identity)
 		{
 			$this->error(UserNotFound, 'user with ID ' . $this->uid . ' is not found in users table');
 		}
 		return $user_model;
-	}
-
-	protected function getUserItemsIndexed($user_model)
-	{
-		$user_items_indexed = [];
-		$user_items = json_decode($user_model->items);
-		if (is_array($user_items))
-		{
-			foreach ($user_items as $item)
-			{
-				$user_items_indexed[$item->id] = $item;
-			}
-		}
-		return $user_items_indexed;
 	}
 
 	protected function error($code, $msg)
