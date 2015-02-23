@@ -64,8 +64,6 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             	$first_name = \Yii::$app->request->get('first_name', null);
             	$last_name = \Yii::$app->request->get('last_name', null);
             	$user_model->user_id = $uid;
-            	$user_model->first_name = $first_name;
-            	$user_model->last_name = $last_name;
             	$user_model->save();
                 $user_model = Users::findOne($uid); // TODO: просто сделать load default values
             }
