@@ -74,4 +74,14 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
         return null;
     }
+
+    public function getAuthKey()
+    {
+        return null; // this method is not used anyway
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return null; // this method is not used anyway
+    }
 }
