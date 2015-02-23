@@ -12,8 +12,11 @@ How to setup
 6. Create users table by typing in terminal "./yii migrate";
 
 You're done! Go ahead and modify controllers/MainController.php and corresponding views! You can use
+
 	\Yii::$app->user->identity->id
+
 to get the id of the current user, as well as these properties:
+
 	\Yii:$app->user->identiry->first_name
 	\Yii:$app->user->identiry->last_name
 
