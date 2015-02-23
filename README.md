@@ -1,5 +1,5 @@
-vk.com application template written on yii2 and backbone.js
-===========================================================
+vk app template written on yii2/backbone
+========================================
 
 How to setup
 ============
