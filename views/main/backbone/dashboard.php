@@ -1,30 +1,26 @@
 var DashboardPage = Backbone.View.extend({
 
 	el: '#page',
-	// Dashboard events
 	events: {
 
 	},
 	render: function () {
-		VK.callMethod("showInstallBox"); // ради рассылки уведомлений прил должен быть установлен
+		VK.callMethod("showInstallBox"); 
 
-		if ($("#dashboard").length == 0) { // рендерить всё заново только если ещё не рендерили
+		if ($("#dashboard").length == 0) {
 			setFrameHeight(1020);
 			var template = _.template($('#dashboard-template').html(), {
 
 			});
 			$("#container").append(template);
 
-			// по-умолчанию открыта вкладка перевод другу - заполняем её
 			var tab_1 = _.template($('#tab-1-template').html(), {
 			});
 			$('#tab-1').html(tab_1);
 
-			// запрос истории переводов
-			// если есть новый перевод - показываем
 			$.ajax({
 				method: "POST",
-				url: "<?php echo Yii::app()->request->baseUrl;?>/endpoint",
+				url: "<?= \Yii::$app->request->baseUrl ?>/endpoint",
 				dataType: "json",
 				data: {
 					uid: id,
