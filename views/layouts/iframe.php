@@ -13,7 +13,6 @@
 	<script src="//vk.com/js/api/xd_connection.js?2" type="text/javascript"></script>
 	<script src="<?php echo Yii::$app->request->baseUrl;?>/js/openapi.js" type="text/javascript"></script>
 	<script src="<?php echo Yii::$app->request->baseUrl;?>/js/vk.js"></script>	
-	<script src="<?php echo Yii::$app->request->baseUrl;?>/js/date-ru-RU.js"></script>
 	<script src="<?php echo Yii::$app->request->baseUrl;?>/js/md5.js"></script>
 	<script src="<?php echo Yii::$app->request->baseUrl;?>/js/jquery-ui.min.js"></script>
 	<?= $content ?>
